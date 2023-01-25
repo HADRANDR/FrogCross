@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     Animator animator;
     [SerializeField] private float _speedCount = 0.5f;
     [SerializeField] private float _jumpCount = 0.1f;
+    [SerializeField] private float speed = 6f;
     private Vector3 _firstPointX;
     private Vector3 _stayPointX;
     private Vector3 _firstPointY;
@@ -59,14 +60,14 @@ public class PlayerController : MonoBehaviour
                 {
                     rb.gameObject.transform.DORotate(new Vector3(0, -90, 0), 0.5f);
                     rb.gameObject.transform.DOMoveY(1, _jumpCount);
-                    rb.gameObject.transform.DOMoveX(transform.position.x - 1, _speedCount);               
+                    rb.gameObject.transform.DOMoveX(transform.position.x - speed, _speedCount);               
                     animator.SetBool("Jump", true);
                 }
                 if (_directionDifX < 0)
                 {
                     rb.gameObject.transform.DORotate(new Vector3(0, 90, 0), 0.5f);
                     rb.gameObject.transform.DOMoveY(1, _jumpCount);
-                    rb.gameObject.transform.DOMoveX(transform.position.x + 1, _speedCount);
+                    rb.gameObject.transform.DOMoveX(transform.position.x + speed, _speedCount);
                     animator.SetBool("Jump", true);
                 }
             }
@@ -76,14 +77,14 @@ public class PlayerController : MonoBehaviour
                 {
                     rb.gameObject.transform.DORotate(new Vector3(0, 180, 0), 0.5f);
                     rb.gameObject.transform.DOMoveY(1, _jumpCount);
-                    rb.gameObject.transform.DOMoveZ(transform.position.z - 1, _speedCount);
+                    rb.gameObject.transform.DOMoveZ(transform.position.z - speed, _speedCount);
                     animator.SetBool("Jump", true);
                 }
                 if (_directionDifY < 0)
                 {
                     rb.gameObject.transform.DORotate(new Vector3(0, 0, 0), 0.5f);
                     rb.gameObject.transform.DOMoveY(1, _jumpCount);
-                    rb.gameObject.transform.DOMoveZ(transform.position.z + 1, _speedCount);
+                    rb.gameObject.transform.DOMoveZ(transform.position.z + speed, _speedCount);
                     animator.SetBool("Jump", true);
                 }             
             }
@@ -92,7 +93,7 @@ public class PlayerController : MonoBehaviour
             {
                 rb.gameObject.transform.DORotate(new Vector3(0, 0, 0), 0.5f);
                 rb.gameObject.transform.DOMoveY(1, _jumpCount);
-                rb.gameObject.transform.DOMoveZ(transform.position.z+1, _speedCount);
+                rb.gameObject.transform.DOMoveZ(transform.position.z+ speed, _speedCount);
             }
         }
         
