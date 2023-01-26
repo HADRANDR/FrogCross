@@ -5,6 +5,7 @@ using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 {
+    float time;
     Rigidbody rb;
     Animator animator;
     [SerializeField] private float _speedCount = 0.5f; // X ekseninde belirtilen birim ilerleme süresi
@@ -28,7 +29,7 @@ public class PlayerController : MonoBehaviour
         movementControl = true;
     }
     void Update()
-    {
+    { 
         if (Input.GetMouseButtonDown(0)) // İlk Input verisinin tutulma aşamasını
         {
             _firstPointX = Camera.main.ScreenToViewportPoint(new Vector3(Input.mousePosition.x, 0, 0));

@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class VehicleCycle : MonoBehaviour
 {
-    int random;
+    [SerializeField]int random;
     private void Awake() 
     {
-        random = Random.Range(5, 15);
+
     }
     void Update()
     {
