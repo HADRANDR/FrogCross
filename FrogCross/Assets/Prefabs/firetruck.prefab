@@ -265,9 +265,10 @@ GameObject:
   m_Component:
   - component: {fileID: 6328798384885722704}
   - component: {fileID: 5791296950501517912}
+  - component: {fileID: -4361279749723953122}
   m_Layer: 0
   m_Name: firetruck
-  m_TagString: Untagged
+  m_TagString: Car
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -308,6 +309,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 124
   m_CollisionDetection: 0
+--- !u!114 &-4361279749723953122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6674255710972130538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6130d29f4741c3d40ae9d4991db107fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _speed: 35
 --- !u!1 &7054598928030721572
 GameObject:
   m_ObjectHideFlags: 0

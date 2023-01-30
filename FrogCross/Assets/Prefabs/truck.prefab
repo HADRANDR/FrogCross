@@ -198,9 +198,10 @@ GameObject:
   m_Component:
   - component: {fileID: 2316179900209575567}
   - component: {fileID: 2859222974917879673}
+  - component: {fileID: 4840796778107119388}
   m_Layer: 0
   m_Name: truck
-  m_TagString: Untagged
+  m_TagString: Car
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -241,6 +242,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 124
   m_CollisionDetection: 0
+--- !u!114 &4840796778107119388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3129836764371643445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6130d29f4741c3d40ae9d4991db107fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _speed: 15
 --- !u!1 &3367835544135288296
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,7 +5,10 @@ using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 {
-    float time;
+    [SerializeField] MenuManager menuManager;
+    public static bool Pause = false;
+    int _faceCount;
+    float _delayTime;
     Rigidbody rb;
     Animator animator;
     [SerializeField] private float _speedCount = 0.5f; // X ekseninde belirtilen birim ilerleme süresi
@@ -22,105 +25,139 @@ public class PlayerController : MonoBehaviour
     private float _directionDifX; // X ekseninde ekranda ilk basılan ve sürekli basılan referanslar arasındaki değeri tutar.
     private float _directionDifY; // Y ekseninde ekranda ilk basılan ve sürekli basılan referanslar arasındaki değeri tutar.
     private bool movementControl; // Animasyon esnasında tekrar kontrolü sağlar.
+    AudioSource audioSource;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         movementControl = true;
+        audioSource = GetComponent<AudioSource>();
     }
     void Update()
-    { 
-        if (Input.GetMouseButtonDown(0)) // İlk Input verisinin tutulma aşamasını
+    {
+        _delayTime += Time.deltaTime;
+        if (MenuManager.startControl == true)
         {
-            _firstPointX = Camera.main.ScreenToViewportPoint(new Vector3(Input.mousePosition.x, 0, 0));
-            _firstPointY = Camera.main.ScreenToViewportPoint(new Vector3(0, Input.mousePosition.y, 0));
+            if (_delayTime >= 3)
+            {
+                if (Input.GetMouseButtonDown(0)) // İlk Input verisinin tutulma aşamasını
+                {
+                    _firstPointX = Camera.main.ScreenToViewportPoint(new Vector3(Input.mousePosition.x, 0, 0));
+                    _firstPointY = Camera.main.ScreenToViewportPoint(new Vector3(0, Input.mousePosition.y, 0));
 
-            _firstPointXtemp = _firstPointX.x;
-            _firstPointYtemp = _firstPointY.y;
+                    _firstPointXtemp = _firstPointX.x;
+                    _firstPointYtemp = _firstPointY.y;
+                }
+                if (Input.GetMouseButton(0))
+                {
+                    _stayPointX = Camera.main.ScreenToViewportPoint(new Vector3(Input.mousePosition.x, 0, 0));
+                    _stayPointY = Camera.main.ScreenToViewportPoint(new Vector3(0, Input.mousePosition.y, 0));
 
-            Debug.Log(_firstPointXtemp);
-            Debug.Log(_firstPointYtemp);
+                    _stayPointXtemp = _stayPointX.x;
+                    _stayPointYtemp = _stayPointY.y;
+
+                    _directionDifX = _firstPointXtemp - _stayPointXtemp;
+                    _directionDifY = _firstPointYtemp - _stayPointYtemp;
+                }
+                if (Input.GetMouseButtonUp(0) && movementControl == true)
+                {
+
+                    if (Mathf.Abs(_directionDifX) > Mathf.Abs(_directionDifY)) // Ekranda X ekseninde Y ekseninden daha fazla hareket sağlandı mı?
+                    {
+                        if (_directionDifX > 0) // X ekseninde sola doğru hareket sağlandı mı?
+                        {
+                            _faceCount = 1;
+                            rb.gameObject.transform.DORotate(new Vector3(0, -90, 0), 0.5f);
+                            rb.gameObject.transform.DOMoveY(1, _jumpCount);
+                            rb.gameObject.transform.DOMoveX(transform.position.x - speed, _speedCount);
+                            animator.SetBool("Jump", true);
+                            audioSource.Play();
+                        }
+                        if (_directionDifX < 0) // // X ekseninde sağa doğru hareket sağlandı mı?
+                        {
+                            _faceCount = 2;
+                            rb.gameObject.transform.DORotate(new Vector3(0, 90, 0), 0.5f);
+                            rb.gameObject.transform.DOMoveY(1, _jumpCount);
+                            rb.gameObject.transform.DOMoveX(transform.position.x + speed, _speedCount);
+                            animator.SetBool("Jump", true);
+                            audioSource.Play();
+                        }
+                    }
+                    if (Mathf.Abs(_directionDifX) < Mathf.Abs(_directionDifY)) // Ekranda Y ekseninde X ekseninden daha fazla hareket sağlandı mı?
+                    {
+                        if (_directionDifY > 0) // Y ekseninde aşağı doğru hareket sağlandı mı?
+                        {
+                            _faceCount = 3;
+                            rb.gameObject.transform.DORotate(new Vector3(0, 180, 0), 0.5f);
+                            rb.gameObject.transform.DOMoveY(1, _jumpCount);
+                            rb.gameObject.transform.DOMoveZ(transform.position.z - speed, _speedCount);
+                            animator.SetBool("Jump", true);
+                            audioSource.Play();
+                        }
+                        if (_directionDifY < 0) // Y ekseninde yukarı doğru hareket sağlandı mı?
+                        {
+                            _faceCount = 3;
+                            rb.gameObject.transform.DORotate(new Vector3(0, 0, 0), 0.5f);
+                            rb.gameObject.transform.DOMoveY(1, _jumpCount);
+                            rb.gameObject.transform.DOMoveZ(transform.position.z + speed, _speedCount);
+                            animator.SetBool("Jump", true);
+                            audioSource.Play();
+                        }
+                    }
+                    float _difGap = Mathf.Abs(_directionDifX) - Mathf.Abs(_directionDifY); // Ekrana kaydırılmadan düz bir şekilde basıldı mı?
+                    if (Mathf.Abs(_difGap) < 0.01)
+                    {
+                        _faceCount = 3;
+                        rb.gameObject.transform.DORotate(new Vector3(0, 0, 0), 0.5f);
+                        rb.gameObject.transform.DOMoveY(1, _jumpCount);
+                        rb.gameObject.transform.DOMoveZ(transform.position.z + speed, _speedCount);
+                        audioSource.Play();
+                    }
+                }
+            }
         }
-        if (Input.GetMouseButton(0))
-        {
-            _stayPointX = Camera.main.ScreenToViewportPoint(new Vector3(Input.mousePosition.x, 0, 0));
-            _stayPointY = Camera.main.ScreenToViewportPoint(new Vector3(0, Input.mousePosition.y, 0));
-
-            _stayPointXtemp = _stayPointX.x;
-            _stayPointYtemp = _stayPointY.y;
-
-            _directionDifX = _firstPointXtemp - _stayPointXtemp;
-            _directionDifY = _firstPointYtemp - _stayPointYtemp;
-        }
-        if (Input.GetMouseButtonUp(0) && movementControl == true)
-        {
-
-            if (Mathf.Abs(_directionDifX) > Mathf.Abs(_directionDifY)) // Ekranda X ekseninde Y ekseninden daha fazla hareket sağlandı mı?
-            {
-                if (_directionDifX > 0) // X ekseninde sola doğru hareket sağlandı mı?
-                {
-                    rb.gameObject.transform.DORotate(new Vector3(0, -90, 0), 0.5f);
-                    rb.gameObject.transform.DOMoveY(1, _jumpCount);
-                    rb.gameObject.transform.DOMoveX(transform.position.x - speed, _speedCount);               
-                    animator.SetBool("Jump", true);
-                }
-                if (_directionDifX < 0) // // X ekseninde sağa doğru hareket sağlandı mı?
-                {
-                    rb.gameObject.transform.DORotate(new Vector3(0, 90, 0), 0.5f);
-                    rb.gameObject.transform.DOMoveY(1, _jumpCount);
-                    rb.gameObject.transform.DOMoveX(transform.position.x + speed, _speedCount);
-                    animator.SetBool("Jump", true);
-                }
-            }
-            if (Mathf.Abs(_directionDifX) < Mathf.Abs(_directionDifY)) // Ekranda Y ekseninde X ekseninden daha fazla hareket sağlandı mı?
-            {
-                if (_directionDifY > 0) // Y ekseninde aşağı doğru hareket sağlandı mı?
-                {
-                    rb.gameObject.transform.DORotate(new Vector3(0, 180, 0), 0.5f);
-                    rb.gameObject.transform.DOMoveY(1, _jumpCount);
-                    rb.gameObject.transform.DOMoveZ(transform.position.z - speed, _speedCount);
-                    animator.SetBool("Jump", true);
-                }
-                if (_directionDifY < 0) // Y ekseninde yukarı doğru hareket sağlandı mı?
-                {
-                    rb.gameObject.transform.DORotate(new Vector3(0, 0, 0), 0.5f);
-                    rb.gameObject.transform.DOMoveY(1, _jumpCount);
-                    rb.gameObject.transform.DOMoveZ(transform.position.z + speed, _speedCount);
-                    animator.SetBool("Jump", true);
-                }             
-            }
-            float _difGap = Mathf.Abs(_directionDifX) - Mathf.Abs(_directionDifY); // Ekrana kaydırılmadan düz bir şekilde basıldı mı?
-            if (Mathf.Abs(_difGap) < 0.01)
-            {
-                rb.gameObject.transform.DORotate(new Vector3(0, 0, 0), 0.5f);
-                rb.gameObject.transform.DOMoveY(1, _jumpCount);
-                rb.gameObject.transform.DOMoveZ(transform.position.z+ speed, _speedCount);
-            }
-        } 
+               
     }
     private void OnCollisionExit(Collision collision)
     {
         animator.SetBool("Jump", false);
-        Debug.Log("Zeminden ayrıldı");
         movementControl = false;
     }
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Zemine düştü");
         movementControl = true;
         if (collision.collider.CompareTag("Car"))   
         {
-            rb.gameObject.transform.DOScaleX(0.1f, 0.1f);
-        }
-        
+            Pause = true;
+            if (_faceCount ==1)
+            {
+                rb.gameObject.transform.DORotate(new Vector3(-90, -90, 0), 2f);
+                rb.gameObject.transform.DOMoveY(3, _jumpCount);
+                rb.gameObject.transform.DOMoveX(transform.position.z + 7.5f, 1f);
+            }
+            else if (_faceCount == 2)
+            {
+                rb.gameObject.transform.DORotate(new Vector3(90, 90, 0), 2f);
+                rb.gameObject.transform.DOMoveY(3, _jumpCount);
+                rb.gameObject.transform.DOMoveX(-transform.position.z + 7.5f, 1f);
+            }
+            else if (_faceCount == 3)
+            {
+                rb.gameObject.transform.DORotate(new Vector3(0, 0, -90), 2f);
+                rb.gameObject.transform.DOMoveY(3, _jumpCount);
+                rb.gameObject.transform.DOMoveX(transform.position.z + 7.5f, 1f);
+            }
+            Debug.Log("KAYBETTİN");
+            menuManager.LoseScreen();           
+        }  
     }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("finish"))
         {
-            Debug.Log("finish");
+            Debug.Log("KAZANDIN");
+            menuManager.WinScreen();
         }
     }
-
 }
+
